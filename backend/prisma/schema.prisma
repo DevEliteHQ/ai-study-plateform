@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  status      ProjectStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents   Document[]
+  outputs     GeneratedOutput[]
+  jobStatuses JobStatus[]
+
+  @@index([userId])
+}
+
+enum ProjectStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  projectId   String
+  type        DocumentType
+  source      String       // URL or file path
+  fileName    String?
+  mimeType    String?
+  size        Int?
+  status      DocumentStatus @default(PENDING)
+  extractedText String?    @db.Text
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  chunks      ContentChunk[]
+
+  @@index([projectId])
+}
+
+enum DocumentType {
+  PDF
+  URL
+  TEXT
+}
+
+enum DocumentStatus {
+  PENDING
+  EXTRACTING
+  EXTRACTED
+  FAILED
+}
+
+model ContentChunk {
+  id          String   @id @default(cuid())
+  documentId  String
+  chunkIndex  Int
+  content     String   @db.Text
+  tokenCount  Int?
+  metadata    Json?    // page number, chapter, section, etc.
+  createdAt   DateTime @default(now())
+
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([documentId, chunkIndex])
+}
+
+model Prompt {
+  id          String   @id @default(cuid())
+  userId      String?
+  name        String
+  description String?
+  content     String   @db.Text
+  version     Int      @default(1)
+  isActive    Boolean  @default(true)
+  isPublic    Boolean  @default(false)
+  metadata    Json?    // role, output structure, tone, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isPublic, isActive])
+}
+
+model ContextBlueprint {
+  id          String   @id @default(cuid())
+  userId      String?
+  name        String
+  description String?
+  type        BlueprintType
+  content     Json     // exam pattern, syllabus, rubric, etc.
+  isActive    Boolean  @default(true)
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([type, isPublic, isActive])
+}
+
+enum BlueprintType {
+  EXAM_SYLLABUS
+  EXAM_PATTERN
+  INTERVIEW_RUBRIC
+  SKILL_MATRIX
+  CUSTOM
+}
+
+model GeneratedOutput {
+  id              String   @id @default(cuid())
+  projectId       String
+  promptId       String?
+  blueprintId    String?
+  type           OutputType
+  rawContent     String   @db.Text
+  normalizedContent Json?  // structured blocks for Notion
+  notionPageId   String?
+  notionPageUrl  String?
+  status         OutputStatus @default(PENDING)
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([notionPageId])
+}
+
+enum OutputType {
+  SUMMARY
+  QUESTION_BANK
+  MOCK_EXAM
+  CRASH_COURSE
+  REVISION_NOTES
+  INTERVIEW_PREP
+  CUSTOM
+}
+
+enum OutputStatus {
+  PENDING
+  GENERATING
+  NORMALIZING
+  PUBLISHING
+  COMPLETED
+  FAILED
+}
+
+model JobStatus {
+  id          String   @id @default(cuid())
+  projectId   String
+  jobType     JobType
+  status      JobStatusEnum @default(PENDING)
+  progress    Int      @default(0)
+  error       String?  @db.Text
+  metadata    Json?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, status])
+}
+
+enum JobType {
+  DOCUMENT_EXTRACTION
+  CONTENT_CHUNKING
+  LLM_GENERATION
+  OUTPUT_NORMALIZATION
+  NOTION_PUBLISHING
+}
+
+enum JobStatusEnum {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+

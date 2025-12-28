@@ -1,0 +1,23 @@
+{
+  "name": "ai-study-platform",
+  "version": "1.0.0",
+  "description": "A generic, scalable, AI-powered automation platform that converts raw learning material (PDFs, websites, documents) into structured, goal-oriented study outputs, automatically published into Notion.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "format:all": "npm run format:backend && npm run format:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:all": "npm run lint:backend && npm run lint:frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  }
+}
