@@ -7,9 +7,9 @@
   ],
   "plugins": ["@typescript-eslint", "prettier"],
   "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "project": "./tsconfig.json"
+  "ecmaVersion": 2022,
+  "sourceType": "module",
+  "project": "./backend/tsconfig.json"
   },
   "env": {
     "node": true,
