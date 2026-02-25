@@ -9,8 +9,8 @@ import logger from './config/logger';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+const app: express.Express = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());

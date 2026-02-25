@@ -1,6 +1,8 @@
 import OpenAI from 'openai';
 import logger from '../config/logger';
 import { LLMResponse } from '../types';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export class LLMExecutionService {
   private openai: OpenAI;
@@ -25,7 +27,8 @@ export class LLMExecutionService {
     metadata?: Record<string, any>
   ): Promise<LLMResponse> {
     try {
-      const systemPrompt = `You are an expert educational content transformer. Your role is to transform raw learning material into structured, goal-oriented study outputs.
+      const systemPrompt = `You are an expert educational content transformer. 
+      Your role is to transform raw learning material into structured, goal-oriented study outputs.
 
 Guidelines:
 - Be accurate and factual
