@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes';
-import { errorHandler } from './middleware/errorHandler';
+import { errorHandler } from './middleware';
 import { upload } from './services/fileIngestion.service';
 import logger from './config/logger';
 

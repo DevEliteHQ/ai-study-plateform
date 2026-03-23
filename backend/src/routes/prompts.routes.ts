@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/auth';
 import { PromptSchema } from '../types';
 import promptManagementService from '../services/promptManagement.service';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // Create prompt
 router.post(

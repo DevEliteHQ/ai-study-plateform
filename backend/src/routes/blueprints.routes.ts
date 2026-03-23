@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/auth';
 import { ContextBlueprintSchema } from '../types';
 import contextBlueprintService from '../services/contextBlueprint.service';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // Create blueprint
 router.post(
