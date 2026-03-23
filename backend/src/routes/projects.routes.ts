@@ -8,7 +8,7 @@ import promptManagementService from '../services/promptManagement.service';
 import contextBlueprintService from '../services/contextBlueprint.service';
 import { documentExtractionQueue } from '../workers/jobQueue';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // Create a new project
 router.post(

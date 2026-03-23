@@ -4,7 +4,7 @@ import promptsRoutes from './prompts.routes';
 import blueprintsRoutes from './blueprints.routes';
 import authRoutes from './auth.routes';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // Public routes
 router.use('/auth', authRoutes);

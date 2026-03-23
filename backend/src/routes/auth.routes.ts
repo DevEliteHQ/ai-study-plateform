@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/auth';
 import authService from '../services/auth.service';
 import { z } from 'zod';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // Validation schemas
 const SignupSchema = z.object({
